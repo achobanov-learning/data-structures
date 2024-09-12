@@ -5,4 +5,8 @@
     <RootNamespace>_01.Two_Three</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj" />
+  </ItemGroup>
+
 </Project>

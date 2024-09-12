@@ -5,6 +5,11 @@ using System;
 namespace BTrees.Benchmark;
 public class Benchmarks
 {
+    public Benchmarks()
+    {
+        
+    }
+
     [Benchmark(Baseline = true)]
     public void Baselline()
     {

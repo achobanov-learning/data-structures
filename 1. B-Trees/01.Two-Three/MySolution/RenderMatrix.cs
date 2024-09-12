@@ -103,33 +103,6 @@ internal class RenderMatrix
         return (_printRow, _printCol);
     }
 
-    private void PrintLeftArm()
-    {
-        var startIndex = _printCol - 2; // first key offset + space
-        for (var i = startIndex; i > startIndex - _arm_length; i--)
-        {
-            _matrix[_printRow][i] = '-';
-        }
-    }
-
-    private void PrintRightArm()
-    {
-        var startIndex = _printCol + 4; // second key offset + space
-        for (var i = startIndex; i < startIndex + _arm_length; i++)
-        {
-            _matrix[_printRow][i] = '-';
-        }
-    }
-
-    public void SetColumn(int col)
-    {
-        if (col >= _width_size - 1)
-        {
-            throw new InvalidOperationException($"Cannot start from index '{col}' as it is outside of the render matrix");
-        }
-        _printCol = col;
-    }
-
     public void MoveToNextChild(string position)
     {
         if (position == "root")
@@ -159,34 +132,6 @@ internal class RenderMatrix
             }
         }
     }
-
-    public void MoveToPreviousTier()
-    {
-        _printRow -= 2;
-    }
-
-    //public void PrintLinkLine()
-    //{
-    //    var nodesCol = new List<int>();
-    //    for (var col = _printCol; col < _width_size; col++)
-    //    {
-    //        if (_matrix[_printRow, col] != ' '
-    //            && _matrix[_printRow, col] != '7'
-    //            && _matrix[_printRow, col] != '-')
-    //        {
-    //            nodesCol.Add(col);
-    //            col += 2;
-    //        }
-    //    }
-    //    var linkRow = _printRow + 1;
-    //    foreach (var col in nodesCol)
-    //    {
-    //        _matrix[linkRow, col - _space] = '/';
-    //        _matrix[linkRow, col + 1] = '|';
-    //        _matrix[linkRow, col + _space + _secondKeyOffset] = '\\';
-    //    }
-    //    _printRow += 2;
-    //}
 
     private void GeneratePrintMatrix()
     {

@@ -1,5 +1,6 @@
 ﻿namespace _01.Two_Three.MySolution
 {
+    using Common;
     using System;
 
     public static class MyTreeNode
@@ -8,7 +9,7 @@
             => new(value);
     }
 
-    public class TreeNode<T>
+    public class TreeNode<T> : INode<T>
         where T : IComparable<T>
     {
         public T LeftKey;
@@ -17,6 +18,10 @@
         public TreeNode<T> LeftChild { get; private set; }
         public TreeNode<T> MiddleChild { get; private set; }
         public TreeNode<T> RightChild { get; private set; }
+
+        public T Value => LeftKey;
+        public INode<T> Left => LeftChild;
+        public INode<T> Right => RightChild;
 
         public TreeNode(T key)
         {
@@ -197,6 +202,11 @@
                 throw new InvalidOperationException($"Tree already contains value '{value}'");
             }
             return result;
+        }
+
+        public INode<T>[] GetChildren()
+        {
+            return [ LeftChild, MiddleChild, RightChild ];
         }
     }
 }

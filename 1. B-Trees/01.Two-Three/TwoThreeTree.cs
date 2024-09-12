@@ -5,11 +5,11 @@
 
     public class TwoThreeTree<T> where T : IComparable<T>
     {
-        private TreeNode<T> root;
+        private TreeNode<T> _root;
 
         public void Insert(T element)
         {
-            this.root = this.Insert(this.root, element);
+            this._root = this.Insert(this._root, element);
         }
 
         private TreeNode<T> Insert(TreeNode<T> node, T element)
@@ -119,7 +119,7 @@
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            RecursivePrint(this.root, sb);
+            RecursivePrint(this._root, sb);
             return sb.ToString();
         }
 

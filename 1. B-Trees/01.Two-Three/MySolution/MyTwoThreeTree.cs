@@ -1,21 +1,22 @@
-﻿using _01.Two_Three.MySolution;
-using System.Collections.Generic;
+﻿using Common;
+using System;
 
 namespace _01.Two_Three.MySolution
 {
     using System;
     using System.Collections.Generic;
 
-    public class MyTwoThreeTree
+    public class MyTwoThreeTree : ITree<string>
     {
-        private RenderMatrix _renderMatrix;
-
         public MyTwoThreeTree()
         {
         }
 
         public TreeNode<string> Root;
 
+        public string Value => Root.Value;
+        public INode<string> Left => Root.Left;
+        public INode<string> Right => Root.Right;
 
         public void Insert(string element)
         {
@@ -64,64 +65,52 @@ namespace _01.Two_Three.MySolution
             }
         }
 
-        public string Render()
+        public void Delete(string value)
         {
-            _renderMatrix = new RenderMatrix();
-            var depth = DepthTraverser.Traverse(Root, 0);
-            PrintNode(Root, depth: depth);
-
-            return _renderMatrix.Render();
+            throw new NotImplementedException();
         }
 
-        private void PrintNode(TreeNode<string> node, int thisRow = 1, int thisCol = 150, int depth = 0)
+        public void DeleteMin()
         {
-            if (_renderMatrix == null)
-            {
-                throw new Exception("Render matrix cannot be null");
-            }
+            throw new NotImplementedException();
+        }
 
-            //_renderMatrix.SetColumn(startIndex);
-            //_renderMatrix.MoveToNextChild(position);
-            var (row, col) = _renderMatrix.PrintNodeKeys(node, thisRow, thisCol);
+        public void DeleteMax()
+        {
+            throw new NotImplementedException();
+        }
 
-            var hasMiddle = node.MiddleChild != null;
+        public int Count()
+        {
+            throw new NotImplementedException();
+        }
 
-            if (hasMiddle)
-            {
-                var (linkRow, linkCol) = _renderMatrix.CreateMiddleChildLink(row, col);
-                PrintNode(node.MiddleChild, ++linkRow, linkCol--);
-            }
-            if (node.LeftChild != null)
-            {
-                var (linkRow, linkCol) = _renderMatrix.CreateLeftChildLink(row, col, hasMiddle, node.LeftChild.IsLeaf(), depth - 1);
-                PrintNode(node.LeftChild, ++linkRow, linkCol - 3);
-            }
+        public string Search(string value)
+        {
+            throw new NotImplementedException();
+        }
 
-            if (node.RightChild != null)
-            {
-                var (linkRow, linkCol) = _renderMatrix.CreateRightChildLink(row, col, hasMiddle, node.RightChild.IsLeaf(), depth - 1);
-                PrintNode(node.RightChild, ++linkRow, linkCol + 1);
-            }
+        public INode<string>[] GetChildren()
+        {
+            return Root.GetChildren();
         }
     }
 }
 
 public static class DepthTraverser
 {
-    public static int Traverse(TreeNode<string> node, int depth)
+    public static int Traverse<T>(INode<T> node, int depth)
+        where T : IComparable<T>
     {
+        if (node == null)
+        {
+            return depth;
+        }
+
         depth++;
-        if (node.LeftChild != null)
+        foreach (var child in node.GetChildren())
         {
-            return Traverse(node.LeftChild, depth);
-        }
-        if (node.MiddleChild != null)
-        {
-            return Traverse(node.MiddleChild, depth);
-        }
-        if (node.RightChild != null)
-        {
-            return Traverse(node.RightChild, depth);
+            depth = Traverse(child, depth);
         }
         return depth;
     }
