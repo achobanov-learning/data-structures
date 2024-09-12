@@ -33,22 +33,22 @@ namespace _01.Two_Three.MySolution
 
             while (!currentNode.IsLeaf())
             {
-                if (currentNode.IsOnTheLeft(inputNode) && currentNode.LeftChild != null)
+                if (currentNode.IsOnTheLeft(inputNode) && currentNode.Left != null)
                 {
                     parentsStack.Push(currentNode);
-                    currentNode = currentNode.LeftChild;
+                    currentNode = (TreeNode<string>)currentNode.Left;
                     continue;
                 }
-                else if (currentNode.IsInTheMiddle(inputNode) && currentNode.MiddleChild != null)
+                else if (currentNode.IsInTheMiddle(inputNode) && currentNode.Middle != null)
                 {
                     parentsStack.Push(currentNode);
-                    currentNode = currentNode.MiddleChild;
+                    currentNode = currentNode.Middle;
                     continue;
                 }
-                else if (currentNode.IsOnTheRight(inputNode) && currentNode.RightChild != null)
+                else if (currentNode.IsOnTheRight(inputNode) && currentNode.Right != null)
                 {
                     parentsStack.Push(currentNode);
-                    currentNode = currentNode.RightChild;
+                    currentNode = (TreeNode<string>)currentNode.Right;
                     continue;
                 }
             }
@@ -93,6 +93,16 @@ namespace _01.Two_Three.MySolution
         public INode<string>[] GetChildren()
         {
             return Root.GetChildren();
+        }
+
+        public bool IsLessThan(INode<string> other)
+        {
+            return Root.IsLessThan(other);
+        }
+
+        public bool IsLeaf()
+        {
+            return Root.IsLeaf();
         }
     }
 }

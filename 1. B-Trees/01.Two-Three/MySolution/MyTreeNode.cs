@@ -2,6 +2,7 @@
 {
     using Common;
     using System;
+    using System.Linq;
 
     public static class MyTreeNode
     {
@@ -9,23 +10,26 @@
             => new(value);
     }
 
-    public class TreeNode<T> : INode<T>
+    public class TreeNode<T> : Node<T>
         where T : IComparable<T>
     {
-        public T LeftKey;
+        public T LeftKey
+        {
+            get => Value;
+            set => Value = value;
+        }
         public T RightKey;
 
-        public TreeNode<T> LeftChild { get; private set; }
-        public TreeNode<T> MiddleChild { get; private set; }
-        public TreeNode<T> RightChild { get; private set; }
+        public TreeNode<T> Middle { get; private set; }
 
-        public T Value => LeftKey;
-        public INode<T> Left => LeftChild;
-        public INode<T> Right => RightChild;
-
-        public TreeNode(T key)
+        public TreeNode(T key) : base(key)
         {
-            LeftKey = key;
+        }
+
+        public override INode<T>[] GetChildren()
+        {
+            INode<T>[] children = [Left, Middle, Right];
+            return children.Where(x => x != null).ToArray();
         }
 
         public override string ToString()
@@ -50,7 +54,7 @@
 
         public bool IsLeaf()
         {
-            return LeftChild == null && MiddleChild == null && RightChild == null;
+            return Left == null && Middle == null && Right == null;
         }
 
         public bool Add(TreeNode<T> node)
@@ -72,14 +76,14 @@
                 {
                     RightKey = LeftKey; // TODO: reference equality?
                     LeftKey = node.LeftKey;
-                    LeftChild = node.LeftChild;
-                    MiddleChild = node.RightChild; // Maybe check IsInTheMiddle?
+                    Left = node.Left;
+                    Middle = (TreeNode<T>)node.Right; // Maybe check IsInTheMiddle?
                 }
                 else if (IsOnTheRight(node))
                 {
                     RightKey = node.LeftKey;
-                    MiddleChild = node.LeftChild;
-                    RightChild = node.RightChild;
+                    Middle = (TreeNode<T>)node.Left;
+                    Right = node.Right;
                 }
                 return false;
             }
@@ -91,17 +95,17 @@
             {
                 throw new InvalidOperationException("Cannot promote triple node. Only double nodes are supposed to be promoted");
             }
-            if (LeftChild.LeftKey?.CompareTo(node.LeftKey) == 0)
+            if (Left.Value?.CompareTo(node.LeftKey) == 0)
             {
-                LeftChild = null;
+                Left = null;
             }
-            else if (MiddleChild?.LeftKey.CompareTo(node.LeftKey) == 0)
+            else if (Middle?.LeftKey.CompareTo(node.LeftKey) == 0)
             {
-                MiddleChild = null;
+                Middle = null;
             }
-            else if (RightChild?.LeftKey.CompareTo(node.LeftKey) == 0)
+            else if (Right?.Value.CompareTo(node.LeftKey) == 0)
             {
-                RightChild = null;
+                Right = null;
             }
             else
             {
@@ -116,58 +120,58 @@
             if (IsOnTheLeft(node))
             {
                 var newRightChild = MyTreeNode.Create(RightKey!);
-                newRightChild.LeftChild = MiddleChild;
-                newRightChild.RightChild = RightChild;
+                newRightChild.Left = Middle;
+                newRightChild.Right = Right;
 
-                LeftChild = node;
-                RightChild = newRightChild;
+                Left = node;
+                Right = newRightChild;
             }
             else if (IsInTheMiddle(node))
             {
                 var promoteValue = node.LeftKey;
                 var newLeftChild = MyTreeNode.Create(LeftKey);
-                newLeftChild.LeftChild = LeftChild;
+                newLeftChild.Left = Left;
                 var newRightChild = MyTreeNode.Create(RightKey!);
-                newRightChild.RightChild = RightChild;
+                newRightChild.Right = Right;
 
-                var middleResult = MiddleChild?.LeftKey.CompareTo(promoteValue);
+                var middleResult = Middle?.LeftKey.CompareTo(promoteValue);
                 if (middleResult == 0)
                 {
                     throw new InvalidOperationException($"Cannot add value '{promoteValue}', because it already exists");
                 }
                 else if (middleResult < 0)
                 {
-                    newLeftChild.RightChild = MiddleChild;
+                    newLeftChild.Right = Middle;
                 }
                 else
                 {
-                    newRightChild.LeftChild = MiddleChild;
+                    newRightChild.Left = Middle;
                 }
 
-                LeftChild = newLeftChild;
-                RightChild = newRightChild;
+                Left = newLeftChild;
+                Right = newRightChild;
                 LeftKey = node.LeftKey;
             }
             else
             {
                 var newLeftChild = MyTreeNode.Create(LeftKey);
-                newLeftChild.LeftChild = LeftChild;
-                newLeftChild.RightChild = MiddleChild;
+                newLeftChild.Left = Left;
+                newLeftChild.Right = Middle;
 
-                LeftChild = newLeftChild;
-                RightChild = node;
+                Left = newLeftChild;
+                Right = node;
                 LeftKey = RightKey!;
             }
-            MiddleChild = null;
+            Middle = null;
             RightKey = default;
         }
 
         private void AddNode(Action<T> keySetter, TreeNode<T> node)
         {
             keySetter(node.LeftKey);
-            LeftChild = node.LeftChild;
-            MiddleChild = node.MiddleChild;
-            RightChild = node.RightChild;
+            Left = node.Left;
+            Middle = node.Middle;
+            Right = node.Right;
         }
 
         public bool IsOnTheLeft(TreeNode<T> node)
@@ -202,11 +206,6 @@
                 throw new InvalidOperationException($"Tree already contains value '{value}'");
             }
             return result;
-        }
-
-        public INode<T>[] GetChildren()
-        {
-            return [ LeftChild, MiddleChild, RightChild ];
         }
     }
 }

@@ -35,21 +35,21 @@ public class TopDownPrinter : INodePrinter
 
         var (row, col) = _matrix.PrintNodeKeys(twoTreeNode, thisRow, thisCol);
 
-        var hasMiddle = twoTreeNode.MiddleChild != null;
+        var hasMiddle = twoTreeNode.Middle != null;
         if (hasMiddle)
         {
             var (linkRow, linkCol) = _matrix.CreateMiddleChildLink(row, col);
-            PrintNode(twoTreeNode.MiddleChild, ++linkRow, linkCol--);
+            PrintNode(twoTreeNode.Middle, ++linkRow, linkCol--);
         }
-        if (twoTreeNode.LeftChild != null)
+        if (twoTreeNode.Left != null)
         {
-            var (linkRow, linkCol) = _matrix.CreateLeftChildLink(row, col, hasMiddle, twoTreeNode.LeftChild.IsLeaf(), depth - 1);
-            PrintNode(twoTreeNode.LeftChild, ++linkRow, linkCol - 3);
+            var (linkRow, linkCol) = _matrix.CreateLeftChildLink(row, col, hasMiddle, twoTreeNode.Left.IsLeaf(), depth - 1);
+            PrintNode(twoTreeNode.Left, ++linkRow, linkCol - 3);
         }
-        if (twoTreeNode.RightChild != null)
+        if (twoTreeNode.Right != null)
         {
-            var (linkRow, linkCol) = _matrix.CreateRightChildLink(row, col, hasMiddle, twoTreeNode.RightChild.IsLeaf(), depth - 1);
-            PrintNode(twoTreeNode.RightChild, ++linkRow, linkCol + 1);
+            var (linkRow, linkCol) = _matrix.CreateRightChildLink(row, col, hasMiddle, twoTreeNode.Right.IsLeaf(), depth - 1);
+            PrintNode(twoTreeNode.Right, ++linkRow, linkCol + 1);
         }
     }
 }
