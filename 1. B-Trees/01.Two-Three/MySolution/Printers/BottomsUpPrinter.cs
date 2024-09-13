@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace _01.Two_Three.MySolution.Printers;
@@ -25,13 +26,27 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
             {
                 _matrix.MoveDown();
             }
-            var startCol = _matrix.GetCurrentColumn();
-            int endCol = 0; // It's never going to be 0 because we have at least 1 child here
+
+            var linksCols = new List<int>();
             foreach (var child in children)
             {
-                endCol = RecursiveImprint(child);
+                var childLinkCol = RecursiveImprint(child);
+                linksCols.Add(childLinkCol);
             }
-            _matrix.MoveUp((startCol + endCol) / 2);
+            _matrix.MoveUp(linksCols.First());
+            for (int col = linksCols.First(); col <= linksCols.Last(); col++)
+            {
+                if (linksCols.Contains(col))
+                {
+                    _matrix.Imprint("|");
+                }
+                else
+                {
+                    _matrix.Imprint(" ");
+                }
+            }
+
+            _matrix.MoveUp((linksCols.First() + linksCols.Last()) / 2);
         }
 
         return PrintNode(node);
@@ -53,10 +68,11 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
             result = SanitizeValue(node.Value.ToString());
         }
 
-        _matrix.Imprint(result);
         var currentCol = _matrix.GetCurrentColumn();
+        var nodeCenter = currentCol + result.Length / 2;
+        _matrix.Imprint(result);
         _matrix.Imprint("   ");
-        return currentCol;
+        return nodeCenter;
 
         string SanitizeTwoTreeValue(TwoThreeNode<T> node)
         {
@@ -118,11 +134,11 @@ public class BottomUpLeftRightMatrix
 
     public void MoveDown()
     {
-        if (_currentHeight <= 0)
+        if (_currentHeight <= 1)
         {
             throw new InvalidOperationException("Cannot move matrix further down than it's starting row");
         }
-        _currentHeight--;
+        _currentHeight -= 2;
     }
 
     /// <summary>
