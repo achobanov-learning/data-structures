@@ -39,7 +39,7 @@ internal class RenderMatrix
         return sb.ToString();
     }
 
-    public (int row, int col) PrintNodeKeys(TreeNode<string> node, int row, int col)
+    public (int row, int col) PrintNodeKeys(TwoThreeNode<string> node, int row, int col)
     {
         _printRow = row;
         _printCol = col;

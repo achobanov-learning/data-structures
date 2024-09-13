@@ -3,11 +3,11 @@ using System;
 
 namespace _01.Two_Three.MySolution.Printers;
 
-public class TopDownPrinter : INodePrinter
+public class TopDownPrinter : INodePrinter<string>
 {
     private RenderMatrix _matrix;
 
-    public void Print<T>(INode<T> node) where T : IComparable<T>
+    public void Print(INode<string> node)
     {
         _matrix = new RenderMatrix();
         var depth = DepthTraverser.Traverse(node, 0);
@@ -17,18 +17,17 @@ public class TopDownPrinter : INodePrinter
         Console.WriteLine(_matrix.Render());
     }
 
-    private void PrintNode<T>(INode<T> node, int thisRow = 1, int thisCol = 150, int depth = 0)
-        where T : IComparable<T>
+    private void PrintNode(INode<string> node, int thisRow = 1, int thisCol = 150, int depth = 0)
     {
         if (_matrix == null)
         {
             throw new Exception("Render matrix cannot be null");
         }
-        if (node is MyTwoThreeTree tree)
+        if (node is MyTwoThreeTree<string> tree)
         {
-            node = (INode<T>)tree.Root;
+            node = (INode<string>)tree.Root;
         }
-        if (node is not TreeNode<string> twoTreeNode)
+        if (node is not TwoThreeNode<string> twoTreeNode)
         {
             throw new NotImplementedException();
         }

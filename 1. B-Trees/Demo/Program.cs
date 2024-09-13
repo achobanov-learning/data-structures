@@ -13,7 +13,7 @@ namespace Demo
 
         static void Static()
         {
-            var tree = new MyTwoThreeTree();
+            var tree = new MyTwoThreeTree<string>();
 
             tree.Insert("d");
             tree.Insert("f");
@@ -34,12 +34,15 @@ namespace Demo
 
             var printer = new TopDownPrinter();
             printer.Print(tree);
+
+            var bottomUpPrinter = new BottomUpPrinter<string>();
+            bottomUpPrinter.Print(tree);
         }
 
         static void Prompt()
         {
             var printer = new TopDownPrinter();
-            var tree = new MyTwoThreeTree();
+            var tree = new MyTwoThreeTree<string>();
 
             printer.Print(tree);
 

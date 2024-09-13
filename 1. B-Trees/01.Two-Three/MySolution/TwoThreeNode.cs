@@ -4,13 +4,13 @@
     using System;
     using System.Linq;
 
-    public static class MyTreeNode
+    public static class TwoThreeNode
     {
-        public static TreeNode<T> Create<T>(T value) where T : IComparable<T>
+        public static TwoThreeNode<T> Create<T>(T value) where T : IComparable<T>
             => new(value);
     }
 
-    public class TreeNode<T> : Node<T>
+    public class TwoThreeNode<T> : Node<T>
         where T : IComparable<T>
     {
         public T LeftKey
@@ -20,9 +20,9 @@
         }
         public T RightKey;
 
-        public TreeNode<T> Middle { get; private set; }
+        public TwoThreeNode<T> Middle { get; private set; }
 
-        public TreeNode(T key) : base(key)
+        public TwoThreeNode(T key) : base(key)
         {
         }
 
@@ -57,7 +57,7 @@
             return Left == null && Middle == null && Right == null;
         }
 
-        public bool Add(TreeNode<T> node)
+        public bool Add(TwoThreeNode<T> node)
         {
             if (node.IsTriple())
             {
@@ -77,19 +77,19 @@
                     RightKey = LeftKey; // TODO: reference equality?
                     LeftKey = node.LeftKey;
                     Left = node.Left;
-                    Middle = (TreeNode<T>)node.Right; // Maybe check IsInTheMiddle?
+                    Middle = (TwoThreeNode<T>)node.Right; // Maybe check IsInTheMiddle?
                 }
                 else if (IsOnTheRight(node))
                 {
                     RightKey = node.LeftKey;
-                    Middle = (TreeNode<T>)node.Left;
+                    Middle = (TwoThreeNode<T>)node.Left;
                     Right = node.Right;
                 }
                 return false;
             }
         }
 
-        public bool Promote(TreeNode<T> node)
+        public bool Promote(TwoThreeNode<T> node)
         {
             if (node.IsTriple())
             {
@@ -115,11 +115,11 @@
             return Add(node);
         }
 
-        private void Rebalance(TreeNode<T> node)
+        private void Rebalance(TwoThreeNode<T> node)
         {
             if (IsOnTheLeft(node))
             {
-                var newRightChild = MyTreeNode.Create(RightKey!);
+                var newRightChild = TwoThreeNode.Create(RightKey!);
                 newRightChild.Left = Middle;
                 newRightChild.Right = Right;
 
@@ -129,9 +129,9 @@
             else if (IsInTheMiddle(node))
             {
                 var promoteValue = node.LeftKey;
-                var newLeftChild = MyTreeNode.Create(LeftKey);
+                var newLeftChild = TwoThreeNode.Create(LeftKey);
                 newLeftChild.Left = Left;
-                var newRightChild = MyTreeNode.Create(RightKey!);
+                var newRightChild = TwoThreeNode.Create(RightKey!);
                 newRightChild.Right = Right;
 
                 var middleResult = Middle?.LeftKey.CompareTo(promoteValue);
@@ -154,7 +154,7 @@
             }
             else
             {
-                var newLeftChild = MyTreeNode.Create(LeftKey);
+                var newLeftChild = TwoThreeNode.Create(LeftKey);
                 newLeftChild.Left = Left;
                 newLeftChild.Right = Middle;
 
@@ -166,7 +166,7 @@
             RightKey = default;
         }
 
-        private void AddNode(Action<T> keySetter, TreeNode<T> node)
+        private void AddNode(Action<T> keySetter, TwoThreeNode<T> node)
         {
             keySetter(node.LeftKey);
             Left = node.Left;
@@ -174,13 +174,13 @@
             Right = node.Right;
         }
 
-        public bool IsOnTheLeft(TreeNode<T> node)
+        public bool IsOnTheLeft(TwoThreeNode<T> node)
         {
             var result = Compare(node.LeftKey, LeftKey);
             return result < 0;
         }
 
-        public bool IsInTheMiddle(TreeNode<T> node)
+        public bool IsInTheMiddle(TwoThreeNode<T> node)
         {
             if (RightKey == null)
             {
@@ -190,7 +190,7 @@
             return Compare(value, LeftKey) > 0 && Compare(value, RightKey!) < 0;
         }
 
-        public bool IsOnTheRight(TreeNode<T> node)
+        public bool IsOnTheRight(TwoThreeNode<T> node)
         {
             var result = RightKey != null
                 ? Compare(node.LeftKey, RightKey)
