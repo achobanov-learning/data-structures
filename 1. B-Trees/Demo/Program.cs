@@ -35,7 +35,7 @@ namespace Demo
             var printer = new TopDownPrinter();
             printer.Print(tree);
 
-            var bottomUpPrinter = new BottomUpPrinter<string>();
+            var bottomUpPrinter = new BottomsUpPrinter<string>();
             bottomUpPrinter.Print(tree);
         }
 

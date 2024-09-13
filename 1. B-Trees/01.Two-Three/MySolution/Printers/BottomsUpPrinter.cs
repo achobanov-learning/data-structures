@@ -5,7 +5,7 @@ using System.Text;
 
 namespace _01.Two_Three.MySolution.Printers;
 
-public class BottomUpPrinter<T> : INodePrinter<T>
+public class BottomsUpPrinter<T> : INodePrinter<T>
     where T : IComparable<T>
 {
     BottomUpLeftRightMatrix _matrix = new();
@@ -16,7 +16,7 @@ public class BottomUpPrinter<T> : INodePrinter<T>
         _matrix.PrintAndFlush();
     }
 
-    void RecursiveImprint(INode<T> node)
+    int RecursiveImprint(INode<T> node)
     {
         var children = node.GetChildren();
         if (children.Length > 0)
@@ -25,17 +25,19 @@ public class BottomUpPrinter<T> : INodePrinter<T>
             {
                 _matrix.MoveDown();
             }
+            var startCol = _matrix.GetCurrentColumn();
+            int endCol = 0; // It's never going to be 0 because we have at least 1 child here
             foreach (var child in children)
             {
-                RecursiveImprint(child);
+                endCol = RecursiveImprint(child);
             }
-            _matrix.MoveUp();
+            _matrix.MoveUp((startCol + endCol) / 2);
         }
 
-        PrintNode(node);
+        return PrintNode(node);
     }
 
-    void PrintNode(INode<T> node)
+    int PrintNode(INode<T> node)
     {
         string result = null;
         if (node is TwoThreeNode<T> twoThreeNode)
@@ -52,7 +54,9 @@ public class BottomUpPrinter<T> : INodePrinter<T>
         }
 
         _matrix.Imprint(result);
+        var currentCol = _matrix.GetCurrentColumn();
         _matrix.Imprint("   ");
+        return currentCol;
 
         string SanitizeTwoTreeValue(TwoThreeNode<T> node)
         {
@@ -81,12 +85,29 @@ public class BottomUpLeftRightMatrix
     List<List<char>> _matrix = [ [] ];
     int _currentHeight = 0;
 
-    public void MoveUp()
+    public int GetCurrentColumn()
+    {
+        return _matrix[_currentHeight].Count;
+    }
+
+    public void MoveUp(int col)
     {
         _currentHeight++;
         if (_matrix.Count == _currentHeight)
         {
-            _matrix.Add([]);
+            var row = new List<char>();
+            for (var i = 0; i < col; i++)
+            {
+                row.Add(' ');
+            }
+            _matrix.Add(row);
+        }
+        else
+        {
+            for (var i = _matrix[_currentHeight].Count; i < col; i++)
+            {
+                _matrix[_currentHeight].Add(' ');
+            }
         }
     }
 
