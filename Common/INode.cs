@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Common;
+﻿namespace Common;
 
 public class Node<T> : INode<T>
     where T : IComparable<T>
@@ -20,7 +18,17 @@ public class Node<T> : INode<T>
         return children.Where(x => x != null).ToArray();
     }
 
-    public bool IsLessThan(INode<T> other)
+    public virtual bool IsLess(T other)
+    {
+        return other.CompareTo(Value) < 0;
+    }
+
+    public virtual bool IsMore(T other)
+    {
+        return other.CompareTo(Value) > 0;
+    }
+
+    public virtual bool IsLess(INode<T> other)
     {
         return Value.CompareTo(other.Value) < 0;
     }
@@ -29,15 +37,39 @@ public class Node<T> : INode<T>
     {
         return GetChildren().Length == 0;
     }
+
+    public virtual string GetPrintValue()
+    {
+        var value = Value.ToString();
+        return SanitizeValue(value);
+    }
+
+    public override string ToString()
+    {
+        var children = GetChildren().Select(x => x.ToString());
+        return $"{Value} ({string.Join(", ", children)}";
+    }
+
+    protected string SanitizeValue(string value)
+    {
+        if (value.Length > 3)
+        {
+            return $"{value[..1]}+";
+        }
+        return value;
+    }
 }
 
 public interface INode<T>
     where T : IComparable<T>
 {
     T Value { get; }
-    INode<T> Left { get; }
-    INode<T> Right { get; }
+    INode<T> Left { get; set; }
+    INode<T> Right { get; set; }
     INode<T>[] GetChildren();
-    bool IsLessThan(INode<T> other);
+    bool IsMore(T other);
+    bool IsLess(T value);
+    bool IsLess(INode<T> other);
     bool IsLeaf();
+    string GetPrintValue();
 }

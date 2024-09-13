@@ -1,15 +1,17 @@
 ﻿using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace _01.Two_Three.MySolution.Printers;
+namespace Common;
 
 public class BottomsUpPrinter<T> : INodePrinter<T>
     where T : IComparable<T>
 {
     BottomUpLeftRightMatrix _matrix = new();
+
+    public void Print(ITree<T> tree)
+    {
+        Print(tree.Root);
+    }
 
     public void Print(INode<T> node)
     {
@@ -17,7 +19,6 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
         {
             return;
         }
-            
         RecursiveImprint(node);
         _matrix.PrintAndFlush();
     }
@@ -27,7 +28,7 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
         var children = node.GetChildren();
         if (children.Length > 0)
         {
-            if (_matrix.CanMoveDown())
+            if (!_matrix.IsEmpty())
             {
                 _matrix.MoveDown();
             }
@@ -39,7 +40,7 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
         }
         else
         {
-            return Print(PrepareNode(node));
+            return Print(node.GetPrintValue());
         }
     }
 
@@ -64,7 +65,7 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
 
     int PrintNodeWithArms(int startCol, int endCol, INode<T> node)
     {
-        var nodeValue = PrepareNode(node);
+        var nodeValue = node.GetPrintValue();
         _matrix.MoveUp(startCol);
 
         var center = (startCol + endCol) / 2;
@@ -82,42 +83,6 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
         _matrix.Imprint("      ");
         return nodeCenter;
     }
-
-    string PrepareNode(INode<T> node)
-    {
-        if (node is TwoThreeNode<T> twoThreeNode)
-        {
-            return SanitizeTwoTreeValue(twoThreeNode);
-        }
-        else if (node is MyTwoThreeTree<T> tree)
-        {
-            return SanitizeTwoTreeValue(tree.Root);
-        }
-        else
-        {
-            return SanitizeValue(node.Value.ToString());
-        }
-
-        string SanitizeTwoTreeValue(TwoThreeNode<T> node)
-        {
-            var leftKey = node.LeftKey.ToString();
-            var result = SanitizeValue(leftKey);
-            if (node.RightKey != null)
-            {
-                result += " " + SanitizeValue(node.RightKey.ToString());
-            }
-            return result;
-        }
-
-        string SanitizeValue(string value)
-        {
-            if (value.Length > 3)
-            {
-                return $"{value[..1]}+";
-            }
-            return value;
-        }
-    }
 }
 
 public class BottomUpLeftRightMatrix
@@ -125,9 +90,11 @@ public class BottomUpLeftRightMatrix
     List<List<char>> _matrix = [ [] ];
     int _currentHeight = 0;
 
-    public int GetCurrentColumn()
+    public int GetCurrentColumn(int? height = null)
     {
-        return _matrix[_currentHeight].Count;
+        return height == null
+            ? _matrix[_currentHeight].Count
+            : _matrix[height.Value].Count;
     }
 
     public void MoveUp(int startCol)
@@ -151,16 +118,22 @@ public class BottomUpLeftRightMatrix
         }
     }
 
-    public bool CanMoveDown()
-    {
-        return _currentHeight > 0;
-    }
+    //public bool CanMoveDown()
+    //{
+    //    return _currentHeight > 0;
+    //}
 
     public void MoveDown()
     {
         if (_currentHeight <= 1)
         {
-            throw new InvalidOperationException("Cannot move matrix further down than it's starting row");
+            _matrix.Reverse();
+            _matrix.Add([]);
+            var col = GetCurrentColumn(_matrix.Count - 2);
+            var row = Enumerable.Repeat(' ', col).ToList();
+            _matrix.Add(row);
+            _matrix.Reverse();
+            _currentHeight = _currentHeight + 2;
         }
         _currentHeight -= 2;
     }
@@ -195,6 +168,17 @@ public class BottomUpLeftRightMatrix
         }
         sb.AppendLine();
         Console.Write(sb.ToString());
+        Flush();
+    }
+
+    public bool IsEmpty()
+    {
+        return _matrix.Count == 1 && _matrix[0].Count == 0;
+    }
+
+    private void Flush()
+    {
         _matrix = [[]];
+        _currentHeight = 0;
     }
 }
