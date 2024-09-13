@@ -13,6 +13,11 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
 
     public void Print(INode<T> node)
     {
+        if (node == null || node.Value == null)
+        {
+            return;
+        }
+            
         RecursiveImprint(node);
         _matrix.PrintAndFlush();
     }
@@ -27,52 +32,71 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
                 _matrix.MoveDown();
             }
 
-            var linksCols = new List<int>();
-            foreach (var child in children)
-            {
-                var childLinkCol = RecursiveImprint(child);
-                linksCols.Add(childLinkCol);
-            }
-            _matrix.MoveUp(linksCols.First());
-            for (int col = linksCols.First(); col <= linksCols.Last(); col++)
-            {
-                if (linksCols.Contains(col))
-                {
-                    _matrix.Imprint("|");
-                }
-                else
-                {
-                    _matrix.Imprint(" ");
-                }
-            }
+            var linkCols = children.Select(RecursiveImprint).ToList();
+            PrintLinks(linkCols);
 
-            _matrix.MoveUp((linksCols.First() + linksCols.Last()) / 2);
-        }
-
-        return PrintNode(node);
-    }
-
-    int PrintNode(INode<T> node)
-    {
-        string result = null;
-        if (node is TwoThreeNode<T> twoThreeNode)
-        {
-            result = SanitizeTwoTreeValue(twoThreeNode);
-        }
-        else if (node is MyTwoThreeTree<T> tree)
-        {
-            result = SanitizeTwoTreeValue(tree.Root);
+            return PrintNodeWithArms(linkCols.First(), linkCols.Last(), node);
         }
         else
         {
-            result = SanitizeValue(node.Value.ToString());
+            return Print(PrepareNode(node));
         }
+    }
 
+    void PrintLinks(List<int> childrenCols)
+    {
+        var startCol = childrenCols.First();
+        var endCol = childrenCols.Last();
+        _matrix.MoveUp(startCol);
+
+        for (int col = startCol; col <= endCol; col++)
+        {
+            if (childrenCols.Contains(col))
+            {
+                _matrix.Imprint("|");
+            }
+            else
+            {
+                _matrix.Imprint(" ");
+            }
+        }
+    }
+
+    int PrintNodeWithArms(int startCol, int endCol, INode<T> node)
+    {
+        var nodeValue = PrepareNode(node);
+        _matrix.MoveUp(startCol);
+
+        var center = (startCol + endCol) / 2;
+        var nodeOffset = nodeValue.Length / 2;
+        var nodeSpaceOffset = 1;
+        var linkArm = new string('-', Math.Max(center - nodeOffset - nodeSpaceOffset - startCol, 1));
+        return Print($"{linkArm} {nodeValue} {linkArm}");
+    }
+
+    int Print(string nodeHead)
+    {
         var currentCol = _matrix.GetCurrentColumn();
-        var nodeCenter = currentCol + result.Length / 2;
-        _matrix.Imprint(result);
-        _matrix.Imprint("   ");
+        var nodeCenter = currentCol + nodeHead.Length / 2;
+        _matrix.Imprint(nodeHead);
+        _matrix.Imprint("      ");
         return nodeCenter;
+    }
+
+    string PrepareNode(INode<T> node)
+    {
+        if (node is TwoThreeNode<T> twoThreeNode)
+        {
+            return SanitizeTwoTreeValue(twoThreeNode);
+        }
+        else if (node is MyTwoThreeTree<T> tree)
+        {
+            return SanitizeTwoTreeValue(tree.Root);
+        }
+        else
+        {
+            return SanitizeValue(node.Value.ToString());
+        }
 
         string SanitizeTwoTreeValue(TwoThreeNode<T> node)
         {
@@ -106,13 +130,13 @@ public class BottomUpLeftRightMatrix
         return _matrix[_currentHeight].Count;
     }
 
-    public void MoveUp(int col)
+    public void MoveUp(int startCol)
     {
         _currentHeight++;
         if (_matrix.Count == _currentHeight)
         {
             var row = new List<char>();
-            for (var i = 0; i < col; i++)
+            for (var i = 0; i < startCol; i++)
             {
                 row.Add(' ');
             }
@@ -120,7 +144,7 @@ public class BottomUpLeftRightMatrix
         }
         else
         {
-            for (var i = _matrix[_currentHeight].Count; i < col; i++)
+            for (var i = _matrix[_currentHeight].Count; i < startCol; i++)
             {
                 _matrix[_currentHeight].Add(' ');
             }
@@ -159,15 +183,18 @@ public class BottomUpLeftRightMatrix
     {
         _matrix.Reverse();
         var sb = new StringBuilder();
+        sb.AppendLine();
         foreach (var row in _matrix)
         {
+            sb.Append("  ");
             foreach (var c in row)
             {
                 sb.Append(c);
             }
             sb.AppendLine();
         }
+        sb.AppendLine();
         Console.Write(sb.ToString());
-        _matrix.Clear();
+        _matrix = [[]];
     }
 }

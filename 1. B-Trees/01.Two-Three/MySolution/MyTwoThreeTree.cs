@@ -15,9 +15,9 @@ namespace _01.Two_Three.MySolution
 
         public TwoThreeNode<T> Root;
 
-        public T Value => Root.Value;
-        public INode<T> Left => Root.Left;
-        public INode<T> Right => Root.Right;
+        public T Value => Root == null ? default : Root.Value;
+        public INode<T> Left => Root?.Left;
+        public INode<T> Right => Root?.Right;
 
         public void Insert(T element)
         {

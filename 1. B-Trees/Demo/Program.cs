@@ -8,7 +8,7 @@ namespace Demo
     {
         static void Main()
         {
-            Static();
+            Prompt();
         }
 
         static void Static()
@@ -41,7 +41,7 @@ namespace Demo
 
         static void Prompt()
         {
-            var printer = new TopDownPrinter();
+            var printer = new BottomsUpPrinter<string>();
             var tree = new MyTwoThreeTree<string>();
 
             printer.Print(tree);
