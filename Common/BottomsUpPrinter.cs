@@ -150,19 +150,29 @@ public class BottomUpLeftRightMatrix
     public void PrintAndFlush()
     {
         _matrix.Reverse();
-        var sb = new StringBuilder();
-        sb.AppendLine();
+        Console.WriteLine();
         foreach (var row in _matrix)
         {
-            sb.Append("  ");
-            foreach (var c in row)
+            Console.Write("  ");
+            for (var i = 0; i < row.Count; i++)
             {
-                sb.Append(c);
+                if (row[i] == 'r' && row[i + 1] == 'e' && row[i + 2] == 'd' && row[i + 3] == ':')
+                {
+                    i += 4;
+                    var node = $"{row[i]}{row[i + 1]}{row[i + 2]}".Trim();
+                    i += node.Length;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"  {node}");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Console.Write(row[i]);
+                }
             }
-            sb.AppendLine();
+            Console.WriteLine();
         }
-        sb.AppendLine();
-        Console.Write(sb.ToString());
+        Console.WriteLine();
         Flush();
     }
 
