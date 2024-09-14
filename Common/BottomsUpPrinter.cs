@@ -118,11 +118,6 @@ public class BottomUpLeftRightMatrix
         }
     }
 
-    //public bool CanMoveDown()
-    //{
-    //    return _currentHeight > 0;
-    //}
-
     public void MoveDown()
     {
         if (_currentHeight <= 1)
