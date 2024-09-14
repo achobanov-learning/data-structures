@@ -33,6 +33,10 @@ public class TwoThreeNode<T> : Node<T>
 
     public override string GetPrintValue()
     {
+        if (LeftKey == null)
+        {
+            return "";
+        }
         var leftKey = LeftKey.ToString();
         var result = SanitizeValue(leftKey);
         if (RightKey != null)
@@ -60,7 +64,9 @@ public class TwoThreeNode<T> : Node<T>
 
     public override bool IsMore(T other)
     {
-        return other.CompareTo(RightKey) > 0;
+        return RightKey == null
+            ? other.CompareTo(LeftKey) > 0
+            : other.CompareTo(RightKey) > 0;
     }
 
     public bool IsDouble()

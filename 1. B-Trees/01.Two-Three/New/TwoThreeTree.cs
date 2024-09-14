@@ -153,8 +153,8 @@ public class TwoThreeTree<T> : ITree<T>
                         }
                         else
                         {
-                            current.Left.Right = new TwoThreeNode<T>(current.Middle.LeftKey);
-                            current.Right.Left = new TwoThreeNode<T>(current.Middle.RightKey);
+                            current.Left.Right = current.Middle.Left;
+                            current.Right.Left = current.Middle.Right;
                         }
                     }
                     current.LeftKey = next.LeftKey;

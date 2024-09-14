@@ -9,7 +9,7 @@ namespace Demo
     {
         static void Main()
         {
-            Prompt();
+            PromptInt();
         }
 
         static void Static()
@@ -59,5 +59,39 @@ namespace Demo
                 printer.Print(tree);
             }
         }
+
+        static void PromptInt()
+        {
+            var printer = new BottomsUpPrinter<IntWrapper>();
+            var tree = new TwoThreeTree<IntWrapper>();
+
+            while (true)
+            {
+                Console.Write("Insert int value: ");
+                var input = new IntWrapper(int.Parse(Console.ReadLine()));
+                tree.Insert(input);
+                printer.Print(tree);
+            }
+        }
+    }
+}
+
+public class IntWrapper : IComparable<IntWrapper>
+{
+    private readonly int _number;
+
+    public IntWrapper(int number)
+    {
+        _number = number;
+    }
+
+    public int CompareTo(IntWrapper other)
+    {
+        return _number.CompareTo(other._number);
+    }
+
+    public override string ToString()
+    {
+        return _number.ToString();
     }
 }
