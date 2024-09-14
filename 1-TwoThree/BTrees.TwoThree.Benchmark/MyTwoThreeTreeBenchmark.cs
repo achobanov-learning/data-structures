@@ -1,6 +1,5 @@
 ﻿using _01.Two_Three;
-using _01.Two_Three.New;
-using BenchmarkDotNet;
+using _01.Two_Three.MySolution;
 using BenchmarkDotNet.Attributes;
 using Common;
 using System;

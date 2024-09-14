@@ -87,7 +87,7 @@ namespace _01.Two_Three.MySolution
             throw new NotImplementedException();
         }
 
-        public string Search(string value)
+        public ITree<string> Search(string value)
         {
             throw new NotImplementedException();
         }

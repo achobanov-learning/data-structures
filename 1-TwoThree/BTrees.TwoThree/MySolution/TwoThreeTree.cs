@@ -1,7 +1,5 @@
 ﻿using Common;
 using System;
-using System.Text;
-using System.Xml.Linq;
 
 namespace _01.Two_Three.MySolution;
 
@@ -51,7 +49,7 @@ public class TwoThreeTree<T> : ITree<T>
         _root = node;
     }
 
-    public T Search(T value)
+    public ITree<T> Search(T value)
     {
         throw new NotImplementedException();
     }

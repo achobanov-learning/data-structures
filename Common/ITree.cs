@@ -9,5 +9,5 @@ public interface ITree<T>
     void DeleteMin();
     void DeleteMax();
     int Count();
-    T Search(T value);
+    ITree<T> Search(T value);
 }
