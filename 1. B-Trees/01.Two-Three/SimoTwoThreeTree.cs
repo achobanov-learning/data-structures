@@ -3,25 +3,25 @@
     using System;
     using System.Text;
 
-    public class TwoThreeTree<T> where T : IComparable<T>
+    public class SimoTwoThreeTree<T> where T : IComparable<T>
     {
-        private TreeNode<T> _root;
+        private SimoTreeNode<T> _root;
 
         public void Insert(T element)
         {
             this._root = this.Insert(this._root, element);
         }
 
-        private TreeNode<T> Insert(TreeNode<T> node, T element)
+        private SimoTreeNode<T> Insert(SimoTreeNode<T> node, T element)
         {
             if (node == null)
             {
-                return new TreeNode<T>(element);
+                return new SimoTreeNode<T>(element);
             }
 
             if (node.IsLeaf())
             {
-                return this.MergeNodes(node, new TreeNode<T>(element));
+                return this.MergeNodes(node, new SimoTreeNode<T>(element));
             }
 
             if (IsLesser(element, node.LeftKey))
@@ -49,7 +49,7 @@
             return element.CompareTo(key) < 0;
         }
 
-        private TreeNode<T> MergeNodes(TreeNode<T> current, TreeNode<T> node)
+        private SimoTreeNode<T> MergeNodes(SimoTreeNode<T> current, SimoTreeNode<T> node)
         {
             if (current.IsTwoNode())
             {
@@ -72,7 +72,7 @@
             }
             else if (IsLesser(node.LeftKey, current.LeftKey))
             {
-                var newNode = new TreeNode<T>(current.LeftKey)
+                var newNode = new SimoTreeNode<T>(current.LeftKey)
                 {
                     LeftChild = node,
                     MiddleChild = current
@@ -88,7 +88,7 @@
             }
             else if (IsLesser(node.LeftKey, current.RightKey))
             {
-                node.MiddleChild = new TreeNode<T>(current.RightKey)
+                node.MiddleChild = new SimoTreeNode<T>(current.RightKey)
                 {
                     LeftChild = node.MiddleChild,
                     MiddleChild = current.RightChild
@@ -102,7 +102,7 @@
             }
             else
             {
-                var newNode = new TreeNode<T>(current.RightKey)
+                var newNode = new SimoTreeNode<T>(current.RightKey)
                 {
                     LeftChild = current,
                     MiddleChild = node
@@ -123,7 +123,7 @@
             return sb.ToString();
         }
 
-        private void RecursivePrint(TreeNode<T> node, StringBuilder sb)
+        private void RecursivePrint(SimoTreeNode<T> node, StringBuilder sb)
         {
             if (node == null)
             {

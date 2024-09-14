@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace _01.Two_Three.New;
+namespace _01.Two_Three.MySolution;
 
 public class TwoThreeNode<T> : Node<T>
     where T : IComparable<T>

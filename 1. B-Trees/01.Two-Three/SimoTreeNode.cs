@@ -2,17 +2,17 @@
 {
     using System;
 
-    public class TreeNode<T> 
+    public class SimoTreeNode<T> 
         where T : IComparable<T>
     {
         public T LeftKey;
         public T RightKey;
 
-        public TreeNode<T> LeftChild;
-        public TreeNode<T> MiddleChild;
-        public TreeNode<T> RightChild;
+        public SimoTreeNode<T> LeftChild;
+        public SimoTreeNode<T> MiddleChild;
+        public SimoTreeNode<T> RightChild;
 
-        public TreeNode(T key)
+        public SimoTreeNode(T key)
         {
             this.LeftKey = key;
         }

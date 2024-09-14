@@ -1,5 +1,4 @@
 ﻿using _01.Two_Three.MySolution;
-using _01.Two_Three.New;
 using Common;
 using System;
 
@@ -9,7 +8,7 @@ namespace Demo
     {
         static void Main()
         {
-            PromptInt();
+            Prompt();
         }
 
         static void Static()
@@ -43,13 +42,7 @@ namespace Demo
         static void Prompt()
         {
             var printer = new BottomsUpPrinter<string>();
-            var tree = new TwoThreeTree<string>("b", new TwoThreeNode<string>("a"), new TwoThreeNode<string>("c") {  RightKey = "g"});
-
-            tree.Insert("h");
-            tree.Insert("k");
-            tree.Insert("m");
-
-            printer.Print(tree);
+            var tree = new TwoThreeTree<string>();
 
             while (true)
             {
@@ -76,22 +69,3 @@ namespace Demo
     }
 }
 
-public class IntWrapper : IComparable<IntWrapper>
-{
-    private readonly int _number;
-
-    public IntWrapper(int number)
-    {
-        _number = number;
-    }
-
-    public int CompareTo(IntWrapper other)
-    {
-        return _number.CompareTo(other._number);
-    }
-
-    public override string ToString()
-    {
-        return _number.ToString();
-    }
-}

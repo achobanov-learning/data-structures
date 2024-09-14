@@ -1,8 +1,9 @@
 ﻿using Common;
 using System;
+using System.Text;
 using System.Xml.Linq;
 
-namespace _01.Two_Three.New;
+namespace _01.Two_Three.MySolution;
 
 public class TwoThreeTree<T> : ITree<T>
     where T : IComparable<T>
@@ -115,7 +116,7 @@ public class TwoThreeTree<T> : ITree<T>
                 if (current.IsLess(next))
                 {
                     current.Left = next;
-                    current.Right = new TwoThreeNode<T>(current.RightKey) // TODO: refactor and test performance without new allocation
+                    current.Right = new TwoThreeNode<T>(current.RightKey) // TODO: try to reduce allocations and benchmark against.
                     {
                         Left = current.Middle,
                         Right = current.Right,
@@ -136,27 +137,13 @@ public class TwoThreeTree<T> : ITree<T>
                     current.Left = new TwoThreeNode<T>(current.LeftKey)
                     {
                         Left = current.Left,
+                        Right = current.Middle?.Right
                     };
                     current.Right = new TwoThreeNode<T>(current.RightKey)
                     {
                         Right = current.Right,
+                        Left = current.Middle?.Left
                     };
-                    if (current.Middle != null)
-                    {
-                        if (current.Middle.IsMore(next.Value))
-                        {
-                            current.Left.Right = current.Middle;
-                        }
-                        else if (current.Middle.IsLess(next.Value))
-                        {
-                            current.Right.Left = current.Middle;
-                        }
-                        else
-                        {
-                            current.Left.Right = current.Middle.Left;
-                            current.Right.Left = current.Middle.Right;
-                        }
-                    }
                     current.LeftKey = next.LeftKey;
                 }
                 current.Middle = null;
