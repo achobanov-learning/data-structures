@@ -4,6 +4,7 @@ public interface ITree<T>
     where T : IComparable<T>
 {
     INode<T> Root { get; }
+    void EachInOrder(Action<T> action);
     void Insert(T value);
     void Delete(T value);
     void DeleteMin();

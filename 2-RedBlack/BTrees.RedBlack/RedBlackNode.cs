@@ -25,4 +25,55 @@ public class RedBlackNode<T> : Node<T>
         }
         return value;
     }
+
+    public bool IsRed()
+    {
+        return Color == RED;
+    }
+
+    public void MarkRed()
+    {
+        Color = RED;
+    }
+
+    public void MarkBlack()
+    {
+        Color = BLACK;
+    }
+
+    public void FlipColor()
+    {
+        Color = !Color;
+    }
+}
+
+public static class RedBlackNodeExtensions
+{
+    public static RedBlackNode<T> AsRedBlack<T>(this INode<T> node)
+        where T : IComparable<T>
+    {
+        if (node == null)
+        {
+            return null;
+        }
+        if (node is not RedBlackNode<T> redBlack)
+        {
+            throw new InvalidOperationException($"Node '{node}' is not a red-black node");
+        }
+        return redBlack;
+    }
+ 
+    public static bool IsRed<T>(this INode<T> node)
+        where T : IComparable<T>
+    {
+        if (node == null)
+        {
+            return false;
+        }
+        if (node is not RedBlackNode<T> redBlack)
+        {
+            throw new InvalidOperationException($"Node '{node}' is not a red-black node");
+        }
+        return redBlack.IsRed();
+    }
 }

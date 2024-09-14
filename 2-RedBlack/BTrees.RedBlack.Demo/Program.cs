@@ -1,5 +1,6 @@
 ﻿using BTrees.RedBlack;
 using Common;
+using System;
 
 namespace Demo
 {
@@ -7,10 +8,21 @@ namespace Demo
     {
         static void Main()
         {
-            var printer = new BottomsUpPrinter<int>();
-            var rbt = new RedBlackTree<int>(5, new RedBlackNode<int>(10));
+            Prompt();
+        }
 
-            printer.Print(rbt);
+        static void Prompt()
+        {
+            var printer = new BottomsUpPrinter<int>();
+            var tree = new RedBlackTree<int>();
+
+            while (true)
+            {
+                Console.Write("Insert int value: ");
+                var input = int.Parse(Console.ReadLine());
+                tree.Insert(input);
+                printer.Print(tree);
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ public class Node<T> : INode<T>
 
     public virtual bool IsLess(INode<T> other)
     {
-        return Value.CompareTo(other.Value) < 0;
+        return other.Value.CompareTo(Value) < 0;
     }
 
     public virtual bool IsLeaf()
