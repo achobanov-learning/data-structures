@@ -35,13 +35,13 @@ namespace Demo
             tree.Insert("k");
             // debug tree.Insert("l") ?
 
-            var bottomUpPrinter = new BottomsUpPrinter<string>();
+            var bottomUpPrinter = new BottomsUpPrinter();
             bottomUpPrinter.Print(tree);
         }
 
         static void Prompt()
         {
-            var printer = new BottomsUpPrinter<string>();
+            var printer = new BottomsUpPrinter();
             var tree = new TwoThreeTree<string>();
 
             while (true)
@@ -55,7 +55,7 @@ namespace Demo
 
         static void PromptInt()
         {
-            var printer = new BottomsUpPrinter<IntWrapper>();
+            var printer = new BottomsUpPrinter();
             var tree = new TwoThreeTree<IntWrapper>();
 
             while (true)

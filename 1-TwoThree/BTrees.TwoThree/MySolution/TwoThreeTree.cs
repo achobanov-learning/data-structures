@@ -54,6 +54,11 @@ public class TwoThreeTree<T> : ITree<T>
         throw new NotImplementedException();
     }
 
+    public void EachInOrder(Action<T> action)
+    {
+        throw new NotImplementedException();
+    }
+
     private static class TwoTreeOperations
     {
         public static (bool rebalanced, TwoThreeNode<T> node) Insert(T value, TwoThreeNode<T> node)

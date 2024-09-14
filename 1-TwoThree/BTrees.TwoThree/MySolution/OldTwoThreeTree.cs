@@ -106,6 +106,11 @@ namespace _01.Two_Three.MySolution
         {
             return Root.IsLeaf();
         }
+
+        public void EachInOrder(Action<string> action)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

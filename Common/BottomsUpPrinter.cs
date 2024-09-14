@@ -3,17 +3,19 @@ using System.Text;
 
 namespace Common;
 
-public class BottomsUpPrinter<T> : INodePrinter<T>
-    where T : IComparable<T>
+public class BottomsUpPrinter : INodePrinter
 {
     BottomUpLeftRightMatrix _matrix = new();
 
-    public void Print(ITree<T> tree)
+    public void Print<T>(ITree<T> tree)
+        where T : IComparable<T>
     {
         Print(tree.Root);
     }
 
-    public void Print(INode<T> node)
+    public void Print<T>(INode<T> node)
+        where T : IComparable<T>
+
     {
         if (node == null || node.Value == null)
         {
@@ -23,7 +25,8 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
         _matrix.PrintAndFlush();
     }
 
-    int RecursiveImprint(INode<T> node)
+    int RecursiveImprint<T>(INode<T> node)
+        where T : IComparable<T>
     {
         var children = node.GetChildren();
         if (children.Length > 0)
@@ -63,7 +66,8 @@ public class BottomsUpPrinter<T> : INodePrinter<T>
         }
     }
 
-    int PrintNodeWithArms(int startCol, int endCol, INode<T> node)
+    int PrintNodeWithArms<T>(int startCol, int endCol, INode<T> node)
+        where T : IComparable<T>
     {
         var nodeValue = node.GetPrintValue();
         _matrix.MoveUp(startCol);

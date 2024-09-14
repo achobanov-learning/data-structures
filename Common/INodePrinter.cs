@@ -1,8 +1,9 @@
 ﻿namespace Common;
 
-public interface INodePrinter<T>
-    where T : IComparable<T>
+public interface INodePrinter
 {
-    void Print(INode<T> node);
-    void Print(ITree<T> tree);
+    void Print<T>(INode<T> node)
+        where T : IComparable<T>;
+    void Print<T>(ITree<T> tree)
+        where T : IComparable<T>;
 }
