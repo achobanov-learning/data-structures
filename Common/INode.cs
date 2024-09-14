@@ -46,8 +46,7 @@ public class Node<T> : INode<T>
 
     public override string ToString()
     {
-        var children = GetChildren().Select(x => x.ToString());
-        return $"{Value} ({string.Join(", ", children)}";
+        return $"{Value}";
     }
 
     protected string SanitizeValue(string value)

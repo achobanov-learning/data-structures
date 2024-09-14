@@ -1,5 +1,6 @@
 ﻿using _01.Two_Three.MySolution;
-using _01.Two_Three.MySolution.Printers;
+using _01.Two_Three.New;
+using Common;
 using System;
 
 namespace Demo
@@ -13,27 +14,27 @@ namespace Demo
 
         static void Static()
         {
-            var tree = new MyTwoThreeTree<string>();
-
+            var tree = new OldTwoThreeTree();
+            tree.Insert("q");
+            tree.Insert("w");
+            tree.Insert("e");
+            tree.Insert("r");
+            tree.Insert("t");
+            tree.Insert("y");
+            tree.Insert("u");
+            tree.Insert("i");
+            tree.Insert("o");
+            tree.Insert("p");
+            tree.Insert("a");
+            tree.Insert("s");
             tree.Insert("d");
             tree.Insert("f");
-            tree.Insert("e");
-            tree.Insert("a");
-            tree.Insert("c");
-            tree.Insert("b");
+            tree.Insert("g");
             tree.Insert("h");
-            tree.Insert("i");
+            tree.Insert("h");
             tree.Insert("j");
             tree.Insert("k");
-            tree.Insert("m");
-            tree.Insert("n");
-            tree.Insert("g");
-            tree.Insert("l");
-            tree.Insert("p");
-            tree.Insert("o");
-
-            var printer = new TopDownPrinter();
-            printer.Print(tree);
+            // debug tree.Insert("l") ?
 
             var bottomUpPrinter = new BottomsUpPrinter<string>();
             bottomUpPrinter.Print(tree);
@@ -42,7 +43,11 @@ namespace Demo
         static void Prompt()
         {
             var printer = new BottomsUpPrinter<string>();
-            var tree = new MyTwoThreeTree<string>();
+            var tree = new TwoThreeTree<string>("b", new TwoThreeNode<string>("a"), new TwoThreeNode<string>("c") {  RightKey = "g"});
+
+            tree.Insert("h");
+            tree.Insert("k");
+            tree.Insert("m");
 
             printer.Print(tree);
 

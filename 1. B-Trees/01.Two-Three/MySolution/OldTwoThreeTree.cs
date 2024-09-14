@@ -6,22 +6,23 @@ namespace _01.Two_Three.MySolution
     using System;
     using System.Collections.Generic;
 
-    public class MyTwoThreeTree<T> : ITree<T>
-        where T : IComparable<T>
+    public class OldTwoThreeTree : ITree<string>
     {
-        public MyTwoThreeTree()
+        public OldTwoThreeTree()
         {
         }
 
-        public TwoThreeNode<T> Root;
+        public OldTwoThreeNode<string> Root;
 
-        public T Value => Root == null ? default : Root.Value;
-        public INode<T> Left => Root?.Left;
-        public INode<T> Right => Root?.Right;
+        public string Value => Root.Value;
+        public INode<string> Left => Root.Left;
+        public INode<string> Right => Root.Right;
 
-        public void Insert(T element)
+        INode<string> ITree<string>.Root => Root;
+
+        public void Insert(string element)
         {
-            var inputNode = TwoThreeNode.Create(element);
+            var inputNode = OldTwoThreeNode.Create(element);
             var currentNode = Root;
 
             if (currentNode == null)
@@ -30,14 +31,14 @@ namespace _01.Two_Three.MySolution
                 return;
             }
 
-            Stack<TwoThreeNode<T>> parentsStack = [];
+            Stack<OldTwoThreeNode<string>> parentsStack = [];
 
             while (!currentNode.IsLeaf())
             {
                 if (currentNode.IsOnTheLeft(inputNode) && currentNode.Left != null)
                 {
                     parentsStack.Push(currentNode);
-                    currentNode = (TwoThreeNode<T>)currentNode.Left;
+                    currentNode = (OldTwoThreeNode<string>)currentNode.Left;
                     continue;
                 }
                 else if (currentNode.IsInTheMiddle(inputNode) && currentNode.Middle != null)
@@ -49,7 +50,7 @@ namespace _01.Two_Three.MySolution
                 else if (currentNode.IsOnTheRight(inputNode) && currentNode.Right != null)
                 {
                     parentsStack.Push(currentNode);
-                    currentNode = (TwoThreeNode<T>)currentNode.Right;
+                    currentNode = (OldTwoThreeNode<string>)currentNode.Right;
                     continue;
                 }
             }
@@ -57,7 +58,7 @@ namespace _01.Two_Three.MySolution
             var rebalanced = currentNode.Add(inputNode);
             while (rebalanced)
             {
-                if (!parentsStack.TryPop(out TwoThreeNode<T> parent))
+                if (!parentsStack.TryPop(out OldTwoThreeNode<string> parent))
                 {
                     break;
                 }
@@ -66,7 +67,7 @@ namespace _01.Two_Three.MySolution
             }
         }
 
-        public void Delete(T value)
+        public void Delete(string value)
         {
             throw new NotImplementedException();
         }
@@ -86,19 +87,19 @@ namespace _01.Two_Three.MySolution
             throw new NotImplementedException();
         }
 
-        public T Search(T value)
+        public string Search(string value)
         {
             throw new NotImplementedException();
         }
 
-        public INode<T>[] GetChildren()
+        public INode<string>[] GetChildren()
         {
             return Root.GetChildren();
         }
 
-        public bool IsLessThan(INode<T> other)
+        public bool IsLessThan(INode<string> other)
         {
-            return Root.IsLessThan(other);
+            return Root.IsLess(other);
         }
 
         public bool IsLeaf()

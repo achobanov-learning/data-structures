@@ -1,8 +1,9 @@
 ﻿namespace Common;
 
-public interface ITree<T> : INode<T>
+public interface ITree<T>
     where T : IComparable<T>
 {
+    INode<T> Root { get; }
     void Insert(T value);
     void Delete(T value);
     void DeleteMin();
