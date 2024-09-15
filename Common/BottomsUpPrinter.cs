@@ -1,7 +1,4 @@
-﻿using Common;
-using System.Text;
-
-namespace Common;
+﻿namespace Common;
 
 public class BottomsUpPrinter : INodePrinter
 {
@@ -43,7 +40,7 @@ public class BottomsUpPrinter : INodePrinter
         }
         else
         {
-            return Print(node.GetPrintValue());
+            return ImprintNode(node.GetPrintable());
         }
     }
 
@@ -57,11 +54,11 @@ public class BottomsUpPrinter : INodePrinter
         {
             if (childrenCols.Contains(col))
             {
-                _matrix.Imprint("|");
+                _matrix.Imprint('|');
             }
             else
             {
-                _matrix.Imprint(" ");
+                _matrix.Imprint(' ');
             }
         }
     }
@@ -69,29 +66,34 @@ public class BottomsUpPrinter : INodePrinter
     int PrintNodeWithArms<T>(int startCol, int endCol, INode<T> node)
         where T : IComparable<T>
     {
-        var nodeValue = node.GetPrintValue();
+        var nodeValue = node.GetPrintable();
         _matrix.MoveUp(startCol);
 
         var center = (startCol + endCol) / 2;
         var nodeOffset = nodeValue.Length / 2;
         var nodeSpaceOffset = 1;
-        var linkArm = new string('-', Math.Max(center - nodeOffset - nodeSpaceOffset - startCol, 1));
-        return Print($"{linkArm} {nodeValue} {linkArm}");
+        var linkArmLength = Math.Max(center - nodeOffset - nodeSpaceOffset - startCol, 1);
+        var linkArm = Printable.Create(new string('-', linkArmLength));
+        var padding = Printable.Create(' ');
+        var nodeWithLinks = Printable.Combine(linkArm, padding, nodeValue, padding, linkArm);
+        return ImprintNode(nodeWithLinks);
     }
 
-    int Print(string nodeHead)
+    int ImprintNode(Printable[] nodeHead)
     {
-        var currentCol = _matrix.GetCurrentColumn();
-        var nodeCenter = currentCol + nodeHead.Length / 2;
+        var startCol = _matrix.GetCurrentColumn();
         _matrix.Imprint(nodeHead);
-        _matrix.Imprint("      ");
+
+        _matrix.ImprintRightPadding(6);
+        
+        var nodeCenter = startCol + nodeHead.Length / 2;
         return nodeCenter;
     }
 }
 
 public class BottomUpLeftRightMatrix
 {
-    List<List<char>> _matrix = [ [] ];
+    List<List<Printable>> _matrix = [ [] ];
     int _currentHeight = 0;
 
     public int GetCurrentColumn(int? height = null)
@@ -106,7 +108,7 @@ public class BottomUpLeftRightMatrix
         _currentHeight++;
         if (_matrix.Count == _currentHeight)
         {
-            var row = new List<char>();
+            var row = new List<Printable>();
             for (var i = 0; i < startCol; i++)
             {
                 row.Add(' ');
@@ -129,7 +131,7 @@ public class BottomUpLeftRightMatrix
             _matrix.Reverse();
             _matrix.Add([]);
             var col = GetCurrentColumn(_matrix.Count - 2);
-            var row = Enumerable.Repeat(' ', col).ToList();
+            var row = Enumerable.Repeat(new Printable(' '), col).ToList();
             _matrix.Add(row);
             _matrix.Reverse();
             _currentHeight = _currentHeight + 2;
@@ -140,15 +142,29 @@ public class BottomUpLeftRightMatrix
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="text"></param>
+    /// <param name="printables"></param>
     /// <returns>the next free col (x) to imprint on the current height</returns>
-    public int Imprint(string text)
+    public int Imprint(params Printable[] printables)
     {
-        foreach (char c in text)
+        foreach (var printable in printables)
         {
-            _matrix[_currentHeight].Add(c);
+            _matrix[_currentHeight].Add(printable);
         }
         return _matrix[_currentHeight].Count;
+    }
+
+    public void ImprintRightPadding(int size)
+    {
+        var padding = Printable.Create(new string(' ', size));
+        var tempHeight = _currentHeight;
+        while (tempHeight >= 0)
+        {
+            foreach (var p in padding)
+            {
+                _matrix[tempHeight].Add(p);
+            }
+            tempHeight--;
+        }
     }
 
     public void PrintAndFlush()
@@ -160,23 +176,12 @@ public class BottomUpLeftRightMatrix
             Console.Write("  ");
             for (var i = 0; i < row.Count; i++)
             {
-                if (row[i] == 'r' && row[i + 1] == 'e' && row[i + 2] == 'd' && row[i + 3] == ':')
-                {
-                    i += 4;
-                    var node = $"{row[i]}{row[i + 1]}{row[i + 2]}".Trim();
-                    i += node.Length;
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write($"  {node}");
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else
-                {
-                    Console.Write(row[i]);
-                }
+                row[i].Print();
             }
             Console.WriteLine();
         }
         Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.White;
         Flush();
     }
 

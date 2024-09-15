@@ -31,11 +31,11 @@ public class TwoThreeNode<T> : Node<T>
         return children.Where(x => x != null).ToArray();
     }
 
-    public override Printable GetPrintValue()
+    public override Printable[] GetPrintable()
     {
         if (LeftKey == null)
         {
-            return "";
+            return Printable.Create(' ');
         }
         var leftKey = LeftKey.ToString();
         var result = SanitizeValue(leftKey);
@@ -43,7 +43,7 @@ public class TwoThreeNode<T> : Node<T>
         {
             result += " " + SanitizeValue(RightKey.ToString());
         }
-        return result;
+        return Printable.Create(result);
     }
 
     public override bool IsLess(INode<T> other)

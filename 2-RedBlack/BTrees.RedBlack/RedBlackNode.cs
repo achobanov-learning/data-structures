@@ -16,15 +16,15 @@ public class RedBlackNode<T> : Node<T>
 
     public bool Color;
 
-    public override Printable GetPrintValue()
+    public override Printable[] GetPrintable()
     {
         //var value = base.GetPrintValue();
         var value = Value.ToString();
         if (Color == RED)
         {
-            return new Printable(value, ConsoleColor.Red);
+            return Printable.Create(value, ConsoleColor.Red);
         }
-        return new Printable(value);
+        return Printable.Create(value);
     }
 
     public bool IsRed()
