@@ -31,7 +31,7 @@ public class TwoThreeNode<T> : Node<T>
         return children.Where(x => x != null).ToArray();
     }
 
-    public override string GetPrintValue()
+    public override Printable GetPrintValue()
     {
         if (LeftKey == null)
         {

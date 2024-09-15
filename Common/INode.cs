@@ -38,10 +38,10 @@ public class Node<T> : INode<T>
         return GetChildren().Length == 0;
     }
 
-    public virtual string GetPrintValue()
+    public virtual Printable GetPrintValue()
     {
         var value = Value.ToString();
-        return SanitizeValue(value);
+        return SanitizeValue(value); // Not sure if necessary any more
     }
 
     public override string ToString()
@@ -53,7 +53,7 @@ public class Node<T> : INode<T>
     {
         if (value.Length > 3)
         {
-            return $"{value[..1]}+";
+            return $"{value[..2]}+";
         }
         return value;
     }
@@ -70,5 +70,5 @@ public interface INode<T>
     bool IsLess(T value);
     bool IsLess(INode<T> other);
     bool IsLeaf();
-    string GetPrintValue();
+    Printable GetPrintValue();
 }

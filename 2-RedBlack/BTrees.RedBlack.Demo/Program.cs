@@ -9,7 +9,7 @@ namespace Demo
     {
         static void Main()
         {
-            Static();
+            Prompt();
         }
 
         static void Static()
@@ -56,7 +56,7 @@ namespace Demo
                 var wrapper = new IntWrapper(input);
                 
                 ttt.Insert(wrapper);
-                printer.Print(ttt);
+                //printer.Print(ttt);
                 
                 rbt.Insert(input);
                 printer.Print(rbt);
