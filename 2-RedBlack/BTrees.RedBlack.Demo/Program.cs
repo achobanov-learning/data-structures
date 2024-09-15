@@ -1,7 +1,9 @@
-﻿using _01.Two_Three.MySolution;
+﻿using _01.RedBlackTree;
+using _01.Two_Three.MySolution;
 using BTrees.RedBlack;
 using Common;
 using System;
+using System.Collections.Generic;
 
 namespace Demo
 {
@@ -9,7 +11,7 @@ namespace Demo
     {
         static void Main()
         {
-            Prompt();
+            StackOverFlowInPrint();
         }
 
         static void Static()
@@ -43,8 +45,29 @@ namespace Demo
             }
         }
 
+        static void StackOverFlowInPrint()
+        {
+            int[] values = [14, 14, 14, 13, 15];
+            var printer = new BottomsUpPrinter();
+            var rbt = new RedBlackTree<int>();
+            var srbt = new SimoRedBlackTree<int>();
+            var ttt = new TwoThreeTree<IntWrapper>();
+
+            foreach (var value in values)
+            {
+                var wrapper = new IntWrapper(value);
+                ttt.Insert(wrapper);
+                srbt.Insert(value);
+                rbt.Insert(value);
+            }
+            printer.Print(ttt);
+            printer.Print(srbt.root);
+            printer.Print(rbt);
+        }
+
         static void Prompt()
         {
+            var values = new List<int>();
             var printer = new BottomsUpPrinter();
             var rbt = new RedBlackTree<int>();
             var ttt = new TwoThreeTree<IntWrapper>();
@@ -52,12 +75,13 @@ namespace Demo
             while (true)
             {
                 Console.Write("Insert int value: ");
-                var input = int.Parse(Console.ReadLine());
-                var wrapper = new IntWrapper(input);
-                
+                var input = int.Parse(Console.ReadLine().Trim());
+                values.Add(input);
+                var wrapper = new IntWrapper(input);;
+
                 ttt.Insert(wrapper);
                 printer.Print(ttt);
-                
+
                 rbt.Insert(input);
                 printer.Print(rbt);
             }
